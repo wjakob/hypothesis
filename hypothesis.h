@@ -162,7 +162,12 @@ namespace hypothesis {
 
 		std::ostringstream oss;
 		for (const Cell &c : cells) {
-			if (expFrequencies[c.index] == 0) {
+			if (expFrequencies[c.index] < 0) {
+				oss << "Encountered a negative expected number of samples ("
+					<< expFrequencies[c.index]
+					<< "). Rejecting the null hypothesis!" << std::endl;
+				return std::make_pair(false, oss.str());
+			} else if (expFrequencies[c.index] == 0) {
 				if (obsFrequencies[c.index] > sampleCount * 1e-5) {
 					/* Uh oh: samples in a cell that should be completely empty
 					   according to the probability density function. Ordinarily,
