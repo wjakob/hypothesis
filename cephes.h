@@ -330,8 +330,7 @@ namespace cephes {
     /// Regularized lower incomplete gamma function
     inline double rlgamma(double a, double x) {
         const double epsilon = 0.000000000000001;
-        const double big = 4503599627370496.0;
-        const double bigInv = 2.22044604925031308085e-16;
+
         if (a < 0 || x < 0)
             throw std::runtime_error("LLGamma: invalid arguments range!");
 
@@ -391,10 +390,10 @@ namespace cephes {
 
             // normalize fraction when the numerator becomes large
             if (std::abs(p) > big) {
-                p3 *= bigInv;
-                p2 *= bigInv;
-                q3 *= bigInv;
-                q2 *= bigInv;
+                p3 *= biginv;
+                p2 *= biginv;
+                q3 *= biginv;
+                q2 *= biginv;
             }
         } while (error > epsilon);
 
