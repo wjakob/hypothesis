@@ -25,21 +25,22 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <algorithm>
 #include <cmath>
-#include <stdexcept>
+#include <fstream>
 #include <functional>
 #include <sstream>
-#include <fstream>
-#include <algorithm>
+#include <stdexcept>
+#include <vector>
 #include "cephes.h"
 
 namespace hypothesis {
-    /// Cumlative distribution function of the standard normal distribution
+    /// Cumulative distribution function of the standard normal distribution
     inline double stdnormal_cdf(double x) {
         return std::erfc(-x/std::sqrt(2.0))*0.5;
     }
 
-    /// Cumlative distribution function of the Chi^2 distribution
+    /// Cumulative distribution function of the Chi^2 distribution
     inline double chi2_cdf(double x, int dof) {
         if (dof < 1 || x < 0) {
             return 0.0;
@@ -50,12 +51,12 @@ namespace hypothesis {
         }
     }
     
-    /// Cumlative distribution function of Student's T distribution
+    /// Cumulative distribution function of Student's T distribution
     inline double students_t_cdf(double x, int dof) {
         if (x > 0)
-            return 1-0.5*cephes::incbet(dof * 0.5f, 0.5f, dof/(x*x+dof));
+            return 1-0.5*cephes::incbet(dof * 0.5, 0.5, dof/(x*x+dof));
         else
-            return 0.5*cephes::incbet(dof * 0.5f, 0.5f, dof/(x*x+dof));
+            return 0.5*cephes::incbet(dof * 0.5, 0.5, dof/(x*x+dof));
     }
 
     /// adaptive Simpson integration over an 1D interval
@@ -65,7 +66,7 @@ namespace hypothesis {
         std::function<double (double, double, double, double, double, double, double, double, int)> integrate =
             [&](double a, double b, double c, double fa, double fb, double fc, double I, double eps, int depth) {
             /* Evaluate the function at two intermediate points */
-            double d = 0.5f * (a + b), e = 0.5f * (b + c), fd = f(d), fe = f(e);
+            double d = 0.5 * (a + b), e = 0.5 * (b + c), fd = f(d), fe = f(e);
 
             /* Simpson integration over each subinterval */
             double h = c-a,
