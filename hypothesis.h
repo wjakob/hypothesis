@@ -12,7 +12,7 @@
         * Neither the name of the <organization> nor the
           names of its contributors may be used to endorse or promote products
           derived from this software without specific prior written permission.
-    
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,6 +24,8 @@
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+#pragma once
 
 #include <algorithm>
 #include <cmath>
@@ -50,7 +52,7 @@ namespace hypothesis {
             return cephes::rlgamma(0.5 * dof, 0.5 * x);
         }
     }
-    
+
     /// Cumulative distribution function of Student's T distribution
     inline double students_t_cdf(double x, int dof) {
         if (x > 0)
@@ -125,7 +127,7 @@ namespace hypothesis {
      *   the threshold specified here.
      *
      * \param significanceLevel
-     *   The null hypothesis will be rejected when the associated 
+     *   The null hypothesis will be rejected when the associated
      *   p-value is below the significance level specified here.
      *
      * \param numTests
@@ -277,7 +279,7 @@ namespace hypothesis {
             << "title('Expected frequencies');" << std::endl;
         f.close();
     }
-    
+
     /**
      * Peform a two-sided t-test based on the given mean, variance and reference value
      *
@@ -285,9 +287,9 @@ namespace hypothesis {
      * certain known value. When there is significant statistical "evidence"
      * against this hypothesis, the test fails.
      *
-     * This is useful in checking whether a Monte Carlo method method converges 
+     * This is useful in checking whether a Monte Carlo method method converges
      * against the right value. Because statistical tests are able to handle the
-     * inherent noise of these methods, they can be used to construct statistical 
+     * inherent noise of these methods, they can be used to construct statistical
      * test suites not unlike the traditional unit tests used in software engineering.
      *
      * \param mean
@@ -303,7 +305,7 @@ namespace hypothesis {
      *   A known reference value ("true mean")
      *
      * \param significanceLevel
-     *   The null hypothesis will be rejected when the associated 
+     *   The null hypothesis will be rejected when the associated
      *   p-value is below the significance level specified here.
      *
      * \param numTests
@@ -334,7 +336,7 @@ namespace hypothesis {
         /* Compute the p-value */
         double pval = 2 * (1 - students_t_cdf(t, dof));
 
-        /* Apply the Sidak correction term, since we'll be conducting multiple independent 
+        /* Apply the Sidak correction term, since we'll be conducting multiple independent
            hypothesis tests. This accounts for the fact that the probability of a failure
            increases quickly when several hypothesis tests are run in sequence. */
         double alpha = 1.0 - std::pow(1.0 - significanceLevel, 1.0 / numTests);
