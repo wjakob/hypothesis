@@ -284,6 +284,49 @@ namespace hypothesis {
         f.close();
     }
 
+    /// Write 2D Chi^2 frequency tables to disk in a format that is nicely plottable by NumPy and Matplotlib
+    inline void chi2_dump_np(int res1, int res2, const double *obsFrequencies, const double *expFrequencies, const std::string &filename) {
+        std::ofstream f(filename);
+
+        f << "import matplotlib.pyplot as plt" << std::endl
+            << "import numpy as np" << std::endl;
+
+        f << "obsFrequencies = np.array([[ ";
+        for (int i=0; i<res1; ++i) {
+            for (int j=0; j<res2; ++j) {
+                f << obsFrequencies[i*res2+j];
+                if (j+1 < res2)
+                    f << ", ";
+            }
+            if (i+1 < res1)
+                f << "], [";
+        }
+        f << " ]]);" << std::endl
+            << "expFrequencies = np.array([[ ";
+        for (int i=0; i<res1; ++i) {
+            for (int j=0; j<res2; ++j) {
+                f << expFrequencies[i*res2+j];
+                if (j+1 < res2)
+                    f << ", ";
+            }
+            if (i+1 < res1)
+                f << "], [";
+        }
+        f << " ]]);" << std::endl
+            << "fig, (ax1, ax2) = plt.subplots(2)" << std::endl
+            << "combined = np.array([obsFrequencies, expFrequencies])" << std::endl
+            // Making the plot use the same color scale for both images
+            << "vmin, vmax = np.min(combined), np.max(combined)" << std::endl
+            << "cmap = plt.colormaps[\"jet\"]" << std::endl
+            << "ax1.imshow(obsFrequencies, cmap=cmap, aspect='auto', vmin = vmin, vmax = vmax)" << std::endl
+            << "ax1.title.set_text(\"obsFrequencies\")" << std::endl
+            << "im = ax2.imshow(expFrequencies, cmap=cmap, aspect='auto', vmin = vmin, vmax = vmax)" << std::endl
+            << "ax2.title.set_text(\"expFrequencies\")" << std::endl
+            << "fig.tight_layout()" << std::endl
+            << "fig.colorbar(im, ax=list([ax1, ax2]))" << std::endl
+            << "plt.show()" << std::endl;
+        f.close();
+    }
     /**
      * Peform a two-sided t-test based on the given mean, variance and reference value
      *
