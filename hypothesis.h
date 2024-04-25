@@ -246,46 +246,8 @@ namespace hypothesis {
         return std::make_pair(result, oss.str());
     }
 
-    /// Write 2D Chi^2 frequency tables to disk in a format that is nicely plottable by Octave and MATLAB
-    inline void chi2_dump(int res1, int res2, const double *obsFrequencies, const double *expFrequencies, const std::string &filename) {
-        std::ofstream f(filename);
-
-        f << "obsFrequencies = [ ";
-        for (int i=0; i<res1; ++i) {
-            for (int j=0; j<res2; ++j) {
-                f << obsFrequencies[i*res2+j];
-                if (j+1 < res2)
-                    f << ", ";
-            }
-            if (i+1 < res1)
-                f << "; ";
-        }
-        f << " ];" << std::endl
-            << "expFrequencies = [ ";
-        for (int i=0; i<res1; ++i) {
-            for (int j=0; j<res2; ++j) {
-                f << expFrequencies[i*res2+j];
-                if (j+1 < res2)
-                    f << ", ";
-            }
-            if (i+1 < res1)
-                f << "; ";
-        }
-        f << " ];" << std::endl
-            << "colormap(jet);" << std::endl
-            << "clf; subplot(2,1,1);" << std::endl
-            << "imagesc(obsFrequencies);" << std::endl
-            << "title('Observed frequencies');" << std::endl
-            << "axis equal;" << std::endl
-            << "subplot(2,1,2);" << std::endl
-            << "imagesc(expFrequencies);" << std::endl
-            << "axis equal;" << std::endl
-            << "title('Expected frequencies');" << std::endl;
-        f.close();
-    }
-
     /// Write 2D Chi^2 frequency tables to disk in a format that is nicely plottable by NumPy and Matplotlib
-    inline void chi2_dump_np(int res1, int res2, const double *obsFrequencies, const double *expFrequencies, const std::string &filename) {
+    inline void chi2_dump(int res1, int res2, const double *obsFrequencies, const double *expFrequencies, const std::string &filename) {
         std::ofstream f(filename);
 
         f << "import matplotlib.pyplot as plt" << std::endl
@@ -327,6 +289,7 @@ namespace hypothesis {
             << "plt.show()" << std::endl;
         f.close();
     }
+
     /**
      * Peform a two-sided t-test based on the given mean, variance and reference value
      *
